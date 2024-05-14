@@ -56,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  int _currentIndex = 0;
 
   void _incrementCounter() {
     setState(() {
@@ -119,7 +120,30 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          onTap: (value) => setState(() {
+            _currentIndex = value;
+          }),
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.edit_document),
+                label: "Suggestions",
+                backgroundColor: Colors.amber),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.gamepad),
+                label: "Clubs",
+                backgroundColor: Colors.amber),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.house),
+                label: "Home",
+                backgroundColor: Colors.amber),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.newspaper),
+                label: "News",
+                backgroundColor: Colors.amber),
+          ]),// This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
