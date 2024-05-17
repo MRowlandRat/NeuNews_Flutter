@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
 
-class CreateInitPage extends StatefulWidget {
-  const CreateInitPage({super.key});
+class CreateSuggestionPage extends StatefulWidget {
+  const CreateSuggestionPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _CreateInitPage();
+  State<StatefulWidget> createState() => _CreateSuggestionPage();
 }
 
-class _CreateInitPage extends State<CreateInitPage> {
+class _CreateSuggestionPage extends State<CreateSuggestionPage> {
   String suggestionTitle = "";
   String suggestionDescription = "";
 
@@ -26,19 +27,7 @@ class _CreateInitPage extends State<CreateInitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'USG',
-            style: TextStyle(
-                color: Colors.yellow.shade600, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: Colors.black,
-          centerTitle: true,
-          flexibleSpace: Container(
-            padding: const EdgeInsets.fromLTRB(0.0, 30.0, 90.0, 0.0),
-            child: Image.asset('assets/images/Neumont_logo.png'),
-          ),
-        ),
+        appBar: neuBar('Create Suggestion'),
         body: Column(
           children: [
             Center(
@@ -47,33 +36,31 @@ class _CreateInitPage extends State<CreateInitPage> {
                   Padding(
                       padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                       child: inputField(
-                          "Suggestion Title", Icons.text_fields, titleController)),
+                          "Suggestion Title", Icons.title, titleController)),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
                     child: inputField(
-                        "Description", Icons.text_fields, descController),
+                        "Suggestion Description", Icons.description, descController),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 20.0),
             Row(
               children: [
-                button(context, "Back", () {
-                  Navigator.pop(context);
-                }, 0, 0, 0, 0),
-                button(context, "Create Initiative", () {
-                  suggestionTitle = titleController.text;
-                  suggestionDescription = descController.text;
-                  //clears text fields
-                  titleController.text = '';
-                  descController.text = '';
-                }, 0, 0, 0, 0)
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
+                    child: button(context, "Create Suggestion", () {
+                      suggestionTitle = titleController.text;
+                      suggestionDescription = descController.text;
+                      //clears text fields
+                      dispose();
+                    }, 0, 0, 0, 0)
+                ),
+
               ],
             ),
           ],
-        ));
+        )
+    );
   }
 }
-
-//body: ,
