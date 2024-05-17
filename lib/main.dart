@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neunews_flutter/Pages/CreateClub.dart';
-import 'Pages/CreateNews.dart';
-import 'Pages/CreateSuggestion.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
 
 void main() {
@@ -35,31 +32,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  List<Widget> pageList = [
-    const CreateNewsPage(),
-    const CreateSuggestionPage(),
-    const CreateClubPage()
-  ];
+  // List<Widget> pageList = [
+  // ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       // appBar: neuBar('Neu News'),
-      //  body: const Center(
-      //    child: Column(
-      //      mainAxisAlignment: MainAxisAlignment.center,
-      //      children: <Widget>[
-      //        Text(
-      //          'You Should NOT see this page.',
-      //        ),
-      //      ],
-      //    ),
-      // ),
+      appBar: neuBar('Neu News'),
+      body: const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'You Should NOT see this page.',
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (value) => setState(() {
-            _currentIndex = value;
-          }),
+                _currentIndex = value;
+              }),
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.edit_document),
@@ -78,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: "News",
                 backgroundColor: Colors.amber),
           ]),
-        body: pageList.elementAt(_currentIndex),
+      // body: pageList.elementAt(_currentIndex),
     );
   }
 }
