@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neunews_flutter/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,9 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You Should NOT see this page.',
-            ),
+            HomePage()
           ],
         ),
       ),
