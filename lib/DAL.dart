@@ -1,7 +1,27 @@
 class DAL{
 
-  String DBConn = 'localhost:2024';
+  String DBConn = 'localhost';
 
+
+///CREATE
+
+void register(Object newUser){
+
+}
+
+
+///READ
+
+
+
+
+///UPDATE
+
+
+
+
+
+///DELETE
 
 
 
