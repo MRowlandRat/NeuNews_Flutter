@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Pages/CreateClub.dart';
 import 'package:neunews_flutter/Pages/CreateNews.dart';
 import 'package:neunews_flutter/Pages/CreateSuggestion.dart';
+import 'package:neunews_flutter/Pages/Login.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
 
@@ -39,8 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> pageList = [
     CreateClubPage(),
     CreateSuggestionPage(),
-    CreateNewsPage(),
-    RegisterPage()
+    RegisterPage(),
+    LoginPage()
   ];
 
   @override

@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:neunews_flutter/Pages/Login.dart';
+import 'package:neunews_flutter/Pages/Register.dart';
 import 'package:neunews_flutter/ReusableWidgets/Button.dart';
 import 'package:neunews_flutter/ReusableWidgets/InputField.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _RegisterPage();
+  State<StatefulWidget> createState() => _LoginPage();
 }
 
-class _RegisterPage extends State<RegisterPage> {
+class _LoginPage extends State<LoginPage> {
   String email = "";
   String password = "";
-  String confirmPassword = '';
 
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
-  final TextEditingController _confirmPasswordTextController = TextEditingController();
 
   @override
   dispose() {
     _emailTextController.text = '';
     _passwordTextController.text = '';
-    _confirmPasswordTextController.text = '';
     super.dispose();
   }
 
@@ -37,30 +34,18 @@ class _RegisterPage extends State<RegisterPage> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: inputField(
-                    "Email", Icons.mail, _emailTextController),
+                child: inputField("Email", Icons.mail, _emailTextController),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                 child: inputField(
-                    "Username", Icons.account_circle, _emailTextController),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: inputField("Password", Icons.lock_outline, _passwordTextController),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: inputField("Confirm Password", Icons.lock, _confirmPasswordTextController),
+                    "Password", Icons.lock_outline, _passwordTextController),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(130, 10, 0, 0),
                 child: button(context, "Register", () {
-                  if (_passwordTextController.text == _confirmPasswordTextController.text) {
-                    // create user
-                    // redirect to home page
-                    print("hello");
-                  } else {}
+                  // redirect to home page
+                  print("hello");
                 }, 0, 0, 0, 0),
               ),
               loginInOption()
@@ -75,13 +60,13 @@ class _RegisterPage extends State<RegisterPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text("Already have an account? "),
+        const Text("Don't have an account? "),
         GestureDetector(
           onTap: () {
             Navigator.push(context,
-                 MaterialPageRoute(builder: (context) => const LoginPage()));
+                 MaterialPageRoute(builder: (context) => const RegisterPage()));
           },
-          child: const Text("Login", style: TextStyle(fontWeight: FontWeight.bold)),
+          child: const Text("Register", style: TextStyle(fontWeight: FontWeight.bold),),
         )
       ],
     );
