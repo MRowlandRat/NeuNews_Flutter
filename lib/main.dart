@@ -39,10 +39,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(
           widget.title,
-          style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold
-          ),
+          style:
+              const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.amber,
         centerTitle: true,
@@ -51,19 +49,12 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Image.asset('assets/images/Neumont_logo.png'),
         ),
       ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            HomePage()
-          ],
-        ),
-      ),
+      body: HomePage(),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (value) => setState(() {
-            _currentIndex = value;
-          }),
+                _currentIndex = value;
+              }),
           items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.edit_document),
