@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:neunews_flutter/Pages/Clubs.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
+import 'package:neunews_flutter/Pages/Suggestions.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,7 +9,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,15 +17,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Neu News'),
+      home: MyHomePage(title: 'Neu News'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title});
 
-  final String title;
+  late String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -32,27 +33,35 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
-  // List<Widget> pageList = [
-  // ];
+  List<Widget> pageList = [
+    const Suggestions(),
+    const Clubs(),
+    const Clubs(),
+    const Clubs(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: neuBar('Neu News'),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You Should NOT see this page.',
-            ),
-          ],
-        ),
-      ),
+      appBar: neuBar(widget.title),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (value) => setState(() {
                 _currentIndex = value;
+                switch(_currentIndex){
+                  case(0):
+                    widget.title = 'Suggestions';
+                    break;
+                  case(1):
+                    widget.title = 'Clubs';
+                    break;
+                  case(2):
+                    widget.title = 'Home';
+                    break;
+                  case(3):
+                    widget.title = 'News';
+                    break;
+                }
               }),
           items: const [
             BottomNavigationBarItem(
@@ -72,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: "News",
                 backgroundColor: Colors.amber),
           ]),
-      // body: pageList.elementAt(_currentIndex),
+      body: pageList.elementAt(_currentIndex),
     );
   }
 }
