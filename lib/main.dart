@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Pages/CreateClub.dart';
-import 'package:neunews_flutter/Pages/CreateNews.dart';
 import 'package:neunews_flutter/Pages/CreateSuggestion.dart';
 import 'package:neunews_flutter/Pages/Login.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
@@ -48,16 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: neuBar('Neu News'),
-      // body: const Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       Text(
-      //         'You Should NOT see this page.',
-      //       ),
-      //     ],
-      //   ),
-      // ),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (value) => setState(() {
@@ -81,6 +70,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 label: "News",
                 backgroundColor: Colors.amber),
           ]),
+      // check if session exists, false: navigate to register/login else show normal app.
+    //   if user session is not set,
+    // Navigator.pushReplacement(context,
+    //     MaterialPageRoute(builder: (context) => const RegisterPage()));
+    //   else navigate to homepage
       body: pageList.elementAt(_currentIndex),
     );
   }
