@@ -5,7 +5,6 @@ TextFormField validationInputField(
     IconData iconData,
     TextEditingController controller,
     TextInputType inputType,
-    String validationType,
     bool obscureText) {
   return TextFormField(
     textCapitalization: TextCapitalization.sentences,
@@ -30,12 +29,6 @@ TextFormField validationInputField(
       ),
     ),
     keyboardType: inputType,
-    validator: (value) {
-      if (value == null || value.isEmpty) {
-        return 'Please enter some text';
-      }
-      return null;
-    },
   );
 }
 

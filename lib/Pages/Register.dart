@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:neunews_flutter/Pages/Login.dart';
 import 'package:neunews_flutter/ReusableWidgets/Button.dart';
-import 'package:neunews_flutter/ReusableWidgets/InputField.dart';
+import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import 'package:neunews_flutter/ReusableWidgets/ValidationInputField.dart';
 import 'package:neunews_flutter/main.dart';
+import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -57,13 +58,12 @@ class _RegisterPage extends State<RegisterPage> {
                     Icons.mail,
                     _emailTextController,
                     TextInputType.emailAddress,
-                    "Email",
                     false),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: inputField(
-                    "Username", Icons.account_circle, _nameTextController),
+                child: validationInputField(
+                    "Username", Icons.account_circle, _nameTextController, TextInputType.name, false),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -72,7 +72,6 @@ class _RegisterPage extends State<RegisterPage> {
                     Icons.lock_outline,
                     _passwordTextController,
                     TextInputType.text,
-                    "Password",
                     true),
               ),
               Padding(
@@ -82,7 +81,6 @@ class _RegisterPage extends State<RegisterPage> {
                     Icons.lock,
                     _confirmPasswordTextController,
                     TextInputType.text,
-                    "Password",
                     true),
               ),
               Padding(
@@ -108,17 +106,22 @@ class _RegisterPage extends State<RegisterPage> {
   void createUser(BuildContext context, String email, String name, String password, String confirmPassword) {
     if (validateInput(context, email, name, password)) {
       if (password == confirmPassword) {
-        //hash password
         password = hashPassword(password);
         // create user by hitting the API
+        var url = Uri.http('192.168.1.11:2024', '/api/Users/CreateUser.php');
+        http.post(url, body: {
+          "username": name,
+          "email": email,
+          "password": password,
+          "admin": "false"
+        });
         //create session with user data (id, username, email)
-        // redirect to home page
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => const MyHomePage(title: "Neu News")));
       } else {
-        showErrorMessage(context, 'Passwords must match!');
+        showSnackBar(context, 'Passwords must match!');
       }
     }
   }
@@ -126,15 +129,15 @@ class _RegisterPage extends State<RegisterPage> {
   bool validateInput(BuildContext context, String email, String name, String password) {
     if (email.isEmpty || name.isEmpty || password.isEmpty) return false;
     if (!isValidEmail(email)) {
-      showErrorMessage(context, 'Please enter a valid email!');
+      showSnackBar(context, 'Please enter a valid email!');
       return false;
     }
     if (!isValidUsername(name)) {
-      showErrorMessage(context, 'Please enter a valid username!');
+      showSnackBar(context, 'Please enter a valid username!');
       return false;
     }
     if (!isValidPassword(password)) {
-      showErrorMessage(context,
+      showSnackBar(context,
           'Passwords must contain at least one Uppercase letter, one Lowercase letter, one Numeric character and one Special character!');
       return false;
     }
@@ -167,12 +170,6 @@ class _RegisterPage extends State<RegisterPage> {
     final RegExp usernameRegex = RegExp(r"^[A-Za-z0-9._-]{4,}$");
     bool isValid = usernameRegex.hasMatch(input);
     return isValid;
-  }
-
-  void showErrorMessage(BuildContext context, String errorMessage) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(errorMessage)),
-    );
   }
 
   Row loginOption() {

@@ -3,9 +3,11 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
 import 'package:neunews_flutter/ReusableWidgets/Button.dart';
+import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import 'package:neunews_flutter/ReusableWidgets/InputField.dart';
 import 'package:neunews_flutter/ReusableWidgets/ValidationInputField.dart';
 import 'package:neunews_flutter/main.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -46,33 +48,28 @@ class _LoginPage extends State<LoginPage> {
                   )),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: inputField("Email", Icons.mail, _emailTextController),
+                child: validationInputField("Email", Icons.mail, _emailTextController, TextInputType.emailAddress, false),
               ),
               validationInputField(
                   "Password",
                   Icons.lock_outline,
                   _passwordTextController,
                   TextInputType.text,
-                  "Password",
                   true),
               Padding(
                 padding: const EdgeInsets.fromLTRB(130, 10, 0, 0),
-                child: button(context, "Login", () {
+                child: button(context, "Login", () async {
                   _email = _emailTextController.text;
                   _password = _passwordTextController.text;
-                  //verify user exists
-                  //check if passwords match
                   _hashedpassword = hashPassword(_password);
-                  // if (_hashedpassword == {USER OBJECT PASSWORD})
-                  {
-                    // redirect to home page
+                  if (await loginUser(_email, _password)){
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const MyHomePage(title: "Neu News")));
+                  } else {
+                      showSnackBar(context, "Invalid username or password");
                   }
-
-                  print("hello");
                 }, 0, 0, 0, 0),
               ),
               Padding(
@@ -85,11 +82,24 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  String hashPassword(String password) {
-    var bytes = utf8.encode(password); // Convert password to bytes
-    var digest = sha256.convert(bytes); // Hash the password
+Future<bool> loginUser(String email, String password) async {
+    String userId = "";
+    //verify user exists through a get by email(?)
+    var url = Uri.http('192.168.1.11:2024', '/api/Users/LoginUser.php');
+    var response = await http.post(url, body: {"email": email, "password": password});
 
-    return digest.toString(); // Convert the hash to a hexadecimal string
+    if (response.statusCode == 200) {
+      userId = response.body;
+    } else {
+      print('Failed to login: ${response.statusCode}');
+    }
+    if (userId != "") {
+      //set session
+      return true;
+    } else {
+      // Password or Email is not valid
+      return false;
+    }
   }
 
   Row loginOption() {
