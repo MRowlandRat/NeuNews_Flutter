@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:neunews_flutter/Models/Club.dart';
 import 'package:neunews_flutter/ReusableWidgets/AdminButton.dart';
 
 class ClubCard extends StatefulWidget {
-  const ClubCard({super.key, required this.club, required this.admin});
+  ClubCard({super.key, required this.inactive, required this.admin});
 
-  final Club club;
+  late bool inactive;
+
   final bool admin;
 
   @override
@@ -17,22 +17,23 @@ class _ClubCardState extends State<ClubCard> {
   late Widget descriptionWidget;
   late Widget nameWidget;
   late Widget approvalWidget;
-  bool inactive = true;
-  String btnTxt = 'Edit';
+  String clubDes =
+      'Lorem Ipsum is simply dummy text of the printing and typesetting industry.';
+  String modeTxt = "Edit";
+  String clubName = 'Club';
   TextEditingController clubDesCon = new TextEditingController();
   TextEditingController clubNameCon = new TextEditingController();
 
   void updateCheck(bool val) {
     setState(() {
-      inactive = val;
-      widget.club.clubInactive = val.toString();
+      widget.inactive = val;
     });
   }
 
   void editMode(String mode) {
-    if (mode == 'Edit') {
+    if (mode == 'edit') {
       setState(() {
-        btnTxt = 'Save';
+        modeTxt = "Save";
         descriptionWidget = Column(
           children: [
             TextField(
@@ -42,7 +43,7 @@ class _ClubCardState extends State<ClubCard> {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Colors.brown, width: 2.0),
                 ),
-                hintText: widget.club.clubDescription,
+                hintText: clubDes,
               ),
             ),
             TextField(
@@ -52,7 +53,7 @@ class _ClubCardState extends State<ClubCard> {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Colors.brown, width: 2.0),
                 ),
-                hintText: widget.club.clubName,
+                hintText: clubName,
               ),
             ),
           ],
@@ -63,44 +64,44 @@ class _ClubCardState extends State<ClubCard> {
             Checkbox(
               checkColor: Colors.amber,
               fillColor: WidgetStateProperty.all(Colors.white),
-              value: inactive,
+              value: widget.inactive,
               onChanged: (val) {
                 updateCheck(val!);
               },
             ),
             Text(
-              inactive ? 'Inactive' : 'Active',
+              widget.inactive ? 'Inactive' : 'Active',
               style: TextStyle(
                   fontWeight: FontWeight.normal,
                   fontSize: 18,
-                  color: inactive ? Colors.red : Colors.green),
+                  color: widget.inactive ? Colors.red : Colors.green),
             ),
           ],
         );
       });
-    } else if (mode == 'Save') {
+    } else if (mode == 'display') {
       setState(() {
-        btnTxt = 'Edit';
-        widget.club.clubDescription = clubDesCon.text;
+        modeTxt = "Edit";
+        clubDes = clubDesCon.text;
         clubDesCon.text = '';
         descriptionWidget = Text(
-          widget.club.clubDescription,
+          clubDes,
           style: const TextStyle(
               fontWeight: FontWeight.normal, fontSize: 18, color: Colors.black),
         );
-        widget.club.clubName = clubNameCon.text;
+        clubName = clubNameCon.text;
         clubNameCon.text = '';
         nameWidget = Text(
-          widget.club.clubName,
+          clubName,
           style: const TextStyle(
               fontWeight: FontWeight.bold, fontSize: 20, color: Colors.amber),
         );
         approvalWidget = Text(
-          inactive ? 'Inactive' : 'Active',
+          widget.inactive ? 'Inactive' : 'Active',
           style: TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: 18,
-              color: inactive ? Colors.red : Colors.green),
+              color: widget.inactive ? Colors.red : Colors.green),
         );
       });
     }
@@ -108,24 +109,22 @@ class _ClubCardState extends State<ClubCard> {
 
   @override
   void initState() {
-    super.initState();
-    widget.club.clubInactive == 'true' ? inactive = true : inactive = false;
     descriptionWidget = Text(
-      widget.club.clubDescription,
+      clubDes,
       style: const TextStyle(
           fontWeight: FontWeight.normal, fontSize: 18, color: Colors.black),
     );
     nameWidget = Text(
-      widget.club.clubName,
+      clubName,
       style: const TextStyle(
           fontWeight: FontWeight.bold, fontSize: 20, color: Colors.amber),
     );
     approvalWidget = Text(
-      inactive ? 'Inactive' : 'Active',
+      widget.inactive ? 'Inactive' : 'Active',
       style: TextStyle(
           fontWeight: FontWeight.normal,
           fontSize: 18,
-          color: inactive ? Colors.red : Colors.green),
+          color: widget.inactive ? Colors.red : Colors.green),
     );
   }
 
@@ -159,7 +158,7 @@ class _ClubCardState extends State<ClubCard> {
               child: Container(
                 height: 90,
                 width: 90,
-                child: Image.network(widget.club.clubImage),
+                child: Image.asset('assets/images/Neumont_logo.png'),
               ),
             ),
             Align(
@@ -169,41 +168,42 @@ class _ClubCardState extends State<ClubCard> {
                 child: descriptionWidget,
               ),
             ),
-            widget.admin
-                ? Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: AdminButton(
-                            label: btnTxt,
-                            labelColor: Colors.green,
-                            action: () {
-                              if (btnTxt == 'Save') {
-                                editMode('Save');
-                                print('Code editing a club');
-                              } else {
-                                editMode('Edit');
-                              }
-                            },
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: AdminButton(
-                            label: 'Delete',
-                            labelColor: Colors.red,
-                            action: () {
-                              print('Code for deleting a club');
-                            },
-                          ),
-                        ),
-                      ],
+            widget.admin ?Padding(
+              padding: EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: AdminButton(
+                      label: modeTxt,
+                      labelColor: Colors.green,
+                      action: () {
+                        if (modeTxt == 'Edit') {
+                          editMode('edit');
+                        } else {
+                          editMode('display');
+                        }
+                      },
                     ),
-                  )
-                : const Text('')
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: AdminButton(
+                      label: 'Delete',
+                      labelColor: Colors.red,
+                      action: () {
+                        print('Delete');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ) : Text('')
+
+
+
+
           ],
         ),
       ),

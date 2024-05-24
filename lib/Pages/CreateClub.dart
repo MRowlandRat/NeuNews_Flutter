@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
@@ -12,10 +11,10 @@ class CreateClubPage extends StatefulWidget {
 }
 
 class _CreateClubPage extends State<CreateClubPage> {
-  String _name = "";
-  String _description = "";
+  String clubName = "";
+  String clubDescription = "";
   // clubImage will be an image upload later once S3 bucket is set up, for now it's just a URL
-  String _imageURL = "";
+  String clubImage = "";
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
@@ -64,20 +63,11 @@ class _CreateClubPage extends State<CreateClubPage> {
                 Padding(
                     padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
                     child: button(context, "Create News", () {
-                      _name = nameController.text;
-                      _description = descController.text;
-                      _imageURL = imageController.text;
-                      if (_name.isEmpty || _description.isEmpty || _imageURL.isEmpty)
-                        {
-                          showSnackBar(context, "Please fill out all fields!");
-                        }
-                      else
-                        {
-                          //create club
-                          //clears text fields
-                          dispose();
-                          showSnackBar(context, "Your Club was created!");
-                        }
+                      clubName = nameController.text;
+                      clubDescription = descController.text;
+                      clubImage = imageController.text;
+                      //clears text fields
+                      dispose();
                     }, 0, 0, 0, 0)
                 ),
               ],
