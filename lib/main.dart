@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Pages/Clubs.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
 import 'package:neunews_flutter/Pages/Suggestions.dart';
+import 'package:neunews_flutter/Pages/HomePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -36,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> pageList = [
     const Suggestions(),
     const Clubs(),
-    const Clubs(),
+    const HomePage(),
     const Clubs(),
   ];
 
