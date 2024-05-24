@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
@@ -11,8 +12,8 @@ class CreateSuggestionPage extends StatefulWidget {
 }
 
 class _CreateSuggestionPage extends State<CreateSuggestionPage> {
-  String suggestionTitle = "";
-  String suggestionDescription = "";
+  String _title = "";
+  String _description = "";
 
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descController = TextEditingController();
@@ -50,10 +51,16 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
                 Padding(
                     padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
                     child: button(context, "Create Suggestion", () {
-                      suggestionTitle = titleController.text;
-                      suggestionDescription = descController.text;
-                      //clears text fields
-                      dispose();
+                      _title = titleController.text;
+                      _description = descController.text;
+                      if (_title.isEmpty || _description.isEmpty)
+                      {
+                        showSnackBar(context, "Fields cannot be left empty!");
+                      } else {
+                        //create suggestion through API
+                        dispose();
+                        showSnackBar(context, "Suggestion created!");
+                      }
                     }, 0, 0, 0, 0)
                 ),
 
