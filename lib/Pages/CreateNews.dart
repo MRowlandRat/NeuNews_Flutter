@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
@@ -11,10 +12,10 @@ class CreateNewsPage extends StatefulWidget {
 }
 
 class _CreateNewsPage extends State<CreateNewsPage> {
-  String newsTitle = "";
-  String newsDescription = "";
+  String _title = "";
+  String _description = "";
   // newsImage will be an image upload later once S3 bucket is set up, for now it's just a URL
-  String newsImage = "";
+  String _imageURL = "";
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
@@ -63,15 +64,16 @@ class _CreateNewsPage extends State<CreateNewsPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
                   child: button(context, "Create News", () {
-                    newsTitle = nameController.text;
-                    newsDescription = descController.text;
-                    newsImage = imageController.text;
-                    //create object
-
-                    //upload object to DB
-
-                    //clears text fields
-                    dispose();
+                    _title = nameController.text;
+                    _description = descController.text;
+                    _imageURL = imageController.text;
+                    if (_title.isEmpty || _description.isEmpty || _imageURL.isEmpty) {
+                      showSnackBar(context, "Please fill out all fields!");
+                    } else {
+                      //create object
+                      dispose();
+                      showSnackBar(context, "News post created!");
+                    }
                   }, 0, 0, 0, 0)
                 ),
               ],
