@@ -16,11 +16,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPage extends State<RegisterPage> {
-  String _email = "";
-  String _username = "";
-  String _password = "";
-  String _confirmPassword = '';
-
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _nameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
@@ -115,11 +110,10 @@ class _RegisterPage extends State<RegisterPage> {
           "password": password,
           "admin": "false"
         });
-        //create session with user data (id, username, email)
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => const MyHomePage(title: "Neu News")));
+                builder: (context) => MyHomePage(title: "Neu News")));
       } else {
         showSnackBar(context, 'Passwords must match!');
       }

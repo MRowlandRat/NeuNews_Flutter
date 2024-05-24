@@ -62,11 +62,11 @@ class _LoginPage extends State<LoginPage> {
                   _email = _emailTextController.text;
                   _password = _passwordTextController.text;
                   _hashedpassword = hashPassword(_password);
-                  if (await loginUser(_email, _password)){
+                  if (await loginUser(_email, _hashedpassword)){
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const MyHomePage(title: "Neu News")));
+                            builder: (context) => MyHomePage(title: "Neu News")));
                   } else {
                       showSnackBar(context, "Invalid username or password");
                   }
