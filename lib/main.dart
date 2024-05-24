@@ -5,6 +5,7 @@ import 'package:neunews_flutter/Pages/Login.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
 import 'package:neunews_flutter/Pages/Suggestions.dart';
+import 'package:neunews_flutter/Pages/HomePage.dart';
 
 void main() {
   runApp(const MyApp());
