@@ -15,7 +15,21 @@ class SessionManagerSingleton {
   }
 
   Future<String> getSessionValue(String key) async {
-    var value = await _sessionManager.get(key);
-    return value ?? '';
+      var value = await _sessionManager.get(key);
+      return value ?? '';
   }
+
+  Future<bool> verifySessionValue(String key) async {
+      var value = await _sessionManager.containsKey(key);
+      return value;
+  }
+
+  void clearSessionValue(String key) async {
+    _sessionManager.remove(key);
+  }
+
+  void updateSession() async {
+    await _sessionManager.update();
+  }
+
 }

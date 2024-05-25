@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:neunews_flutter/Pages/Login.dart';
 import 'package:neunews_flutter/ReusableWidgets/Button.dart';
+import 'package:neunews_flutter/Session.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -18,7 +18,8 @@ class _ProfilePage extends State<ProfilePage> {
         body: Align(
       alignment: Alignment.center,
       child: button(context, "Logout", () async {
-        await SessionManager().destroy();
+        var sessionManager = SessionManagerSingleton();
+        sessionManager.clearSessionValue("user");
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }, 0, 0, 100, 0),

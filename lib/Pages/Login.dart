@@ -141,4 +141,5 @@ Future<void> startSession(String userId) async {
   User user = User.fromJson(json);
   var sessionManager = SessionManagerSingleton();
   sessionManager.setSessionValues("user", user);
+  sessionManager.updateSession();
 }

@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key, required this.title});
 
-  late String title;
+  final String title; // Make the title final
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -49,48 +49,81 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return checkForSession(pageList, _currentIndex);
+  void initState() {
+    super.initState();
+    var sessionManager = SessionManagerSingleton();
+    sessionManager.updateSession();
   }
-}
 
 
-Scaffold checkForSession(List<Widget> pageList, int currentIndex) {
-  var sessionManager = SessionManagerSingleton();
-  if (sessionManager.getSessionValue("user").toString() != null) {
-    return Scaffold(
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Scaffold>(
+      future: checkForSession(pageList, _currentIndex, (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      }),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(child: Text('Error: ${snapshot.error}')),
+          );
+        } else {
+          return snapshot.data!;
+        }
+      },
+    );
+  }
+
+  Future<Scaffold> checkForSession(List<Widget> pageList, int currentIndex, Function(int) onTap) async {
+    var sessionManager = SessionManagerSingleton();
+    sessionManager.updateSession();
+    if (await sessionManager.verifySessionValue("user")) {
+      return Scaffold(
         appBar: neuBar('Neu News'),
         bottomNavigationBar: BottomNavigationBar(
-            currentIndex: currentIndex,
-            onTap: (value) =>
-            {
-              currentIndex = value},
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.edit_document),
-                  label: "Suggestions",
-                  backgroundColor: Colors.amber),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.gamepad),
-                  label: "Clubs",
-                  backgroundColor: Colors.amber),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.house),
-                  label: "Home",
-                  backgroundColor: Colors.amber),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.newspaper),
-                  label: "News",
-                  backgroundColor: Colors.amber),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: "Account",
-                  backgroundColor: Colors.amber),
-            ]),
-        body: pageList.elementAt(currentIndex)
+          currentIndex: currentIndex,
+          onTap: (value) {
+            onTap(value); // Use callback to update state
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.edit_document),
+              label: "Suggestions",
+              backgroundColor: Colors.amber,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.gamepad),
+              label: "Clubs",
+              backgroundColor: Colors.amber,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.house),
+              label: "Home",
+              backgroundColor: Colors.amber,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper),
+              label: "News",
+              backgroundColor: Colors.amber,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Account",
+              backgroundColor: Colors.amber,
+            ),
+          ],
+        ),
+        body: pageList.elementAt(currentIndex),
+      );
+    }
+    return const Scaffold(
+      body: RegisterPage(),
     );
-  }return const Scaffold
-  (
-      body: RegisterPage()
-  );
+  }
 }
