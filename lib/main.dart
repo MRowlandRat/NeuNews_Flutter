@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:neunews_flutter/Pages/CreateClub.dart';
-import 'package:neunews_flutter/Pages/CreateSuggestion.dart';
-import 'package:neunews_flutter/Pages/Login.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:neunews_flutter/Pages/Clubs.dart';
+import 'package:neunews_flutter/Pages/NewsPage.dart';
+import 'package:neunews_flutter/Pages/ProfilePage.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
+import 'package:neunews_flutter/Session.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
 import 'package:neunews_flutter/Pages/Suggestions.dart';
 import 'package:neunews_flutter/Pages/HomePage.dart';
@@ -13,6 +15,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -38,59 +41,56 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   List<Widget> pageList = [
-    CreateClubPage(),
-    CreateSuggestionPage(),
-    RegisterPage(),
-    LoginPage()
+    Suggestions(),
+    Clubs(),
+    HomePage(),
+    NewsPage(),
+    ProfilePage()
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: neuBar('Neu News'),
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (value) => setState(() {
-                _currentIndex = value;
-                switch(_currentIndex){
-                  case(0):
-                    widget.title = 'Suggestions';
-                    break;
-                  case(1):
-                    widget.title = 'Clubs';
-                    break;
-                  case(2):
-                    widget.title = 'Home';
-                    break;
-                  case(3):
-                    widget.title = 'News';
-                    break;
-                }
-              }),
-          items: const [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.edit_document),
-                label: "Suggestions",
-                backgroundColor: Colors.amber),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.gamepad),
-                label: "Clubs",
-                backgroundColor: Colors.amber),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.house),
-                label: "Home",
-                backgroundColor: Colors.amber),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.newspaper),
-                label: "News",
-                backgroundColor: Colors.amber),
-          ]),
-      // check if session exists, false: navigate to register/login else show normal app.
-    //   if user session is not set,
-    // Navigator.pushReplacement(context,
-    //     MaterialPageRoute(builder: (context) => const RegisterPage()));
-    //   else navigate to homepage
-      body: pageList.elementAt(_currentIndex),
-    );
+    return checkForSession(pageList, _currentIndex);
   }
+}
+
+
+Scaffold checkForSession(List<Widget> pageList, int currentIndex) {
+  var sessionManager = SessionManagerSingleton();
+  if (sessionManager.getSessionValue("user").toString() != null) {
+    return Scaffold(
+        appBar: neuBar('Neu News'),
+        bottomNavigationBar: BottomNavigationBar(
+            currentIndex: currentIndex,
+            onTap: (value) =>
+            {
+              currentIndex = value},
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.edit_document),
+                  label: "Suggestions",
+                  backgroundColor: Colors.amber),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.gamepad),
+                  label: "Clubs",
+                  backgroundColor: Colors.amber),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.house),
+                  label: "Home",
+                  backgroundColor: Colors.amber),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.newspaper),
+                  label: "News",
+                  backgroundColor: Colors.amber),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: "Account",
+                  backgroundColor: Colors.amber),
+            ]),
+        body: pageList.elementAt(currentIndex)
+    );
+  }return const Scaffold
+  (
+      body: RegisterPage()
+  );
 }

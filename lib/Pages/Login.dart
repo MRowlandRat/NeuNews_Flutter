@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:neunews_flutter/Models/User.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
 import 'package:neunews_flutter/ReusableWidgets/Button.dart';
 import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import 'package:neunews_flutter/ReusableWidgets/InputField.dart';
 import 'package:neunews_flutter/ReusableWidgets/ValidationInputField.dart';
+import 'package:neunews_flutter/Session.dart';
 import 'package:neunews_flutter/main.dart';
 import 'package:http/http.dart' as http;
 
@@ -84,17 +86,21 @@ class _LoginPage extends State<LoginPage> {
 
 Future<bool> loginUser(String email, String password) async {
     String userId = "";
-    //verify user exists through a get by email(?)
-    var url = Uri.http('192.168.1.11:2024', '/api/Users/LoginUser.php');
-    var response = await http.post(url, body: {"email": email, "password": password});
-
+    Map data = {
+      "email": email,
+      "password": password
+    };
+    //encode Map to JSON
+    var body = json.encode(data);
+    var response = await http.post(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/LoginUser.php"), body: body);
     if (response.statusCode == 200) {
-      userId = response.body;
+      userId = jsonDecode(response.body);
     } else {
       print('Failed to login: ${response.statusCode}');
     }
     if (userId != "") {
       //set session
+      startSession(userId);
       return true;
     } else {
       // Password or Email is not valid
@@ -127,4 +133,12 @@ String hashPassword(String password) {
   var digest = sha256.convert(bytes);
 
   return digest.toString();
+}
+
+Future<void> startSession(String userId) async {
+  var response = await http.get(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/GetOneUser.php/" + userId));
+  var json = jsonDecode(response.body) as Map<String, dynamic>;
+  User user = User.fromJson(json);
+  var sessionManager = SessionManagerSingleton();
+  sessionManager.setSessionValues("user", user);
 }
