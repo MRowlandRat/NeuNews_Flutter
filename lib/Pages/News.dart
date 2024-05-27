@@ -18,7 +18,6 @@ class _NewsState extends State<News> {
   Future<void> _getAllNews() async {
     var response = await http.get(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Posts/GetAllPosts.php"));
     var posts = jsonDecode(response.body);
-    print(posts);
 
     allNews = <Widget>[];
     for(var post in posts){
