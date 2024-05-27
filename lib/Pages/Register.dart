@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:neunews_flutter/Models/User.dart';
 import 'package:neunews_flutter/Pages/Login.dart';
 import 'package:neunews_flutter/ReusableWidgets/Button.dart';
 import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
@@ -16,11 +17,16 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPage extends State<RegisterPage> {
+  String _email = "";
+  String _username = "";
+  String _password = "";
+  String _confirmPassword = "";
+  String _hashedpassword = "";
+
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _nameTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
-  final TextEditingController _confirmPasswordTextController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordTextController = TextEditingController();
 
   @override
   dispose() {
@@ -81,11 +87,11 @@ class _RegisterPage extends State<RegisterPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(130, 10, 0, 0),
                 child: button(context, "Register", () {
-                  String email = _emailTextController.text;
-                  String username = _nameTextController.text;
-                  String password = _passwordTextController.text;
-                  String confirmPassword = _confirmPasswordTextController.text;
-                  createUser(context, email, username, password, confirmPassword);
+                  _email = _emailTextController.text;
+                  _username = _nameTextController.text;
+                  _password = _passwordTextController.text;
+                  _confirmPassword = _confirmPasswordTextController.text;
+                  createUser(context, _email, _username, _password, _confirmPassword);
                 }, 0, 0, 0, 0),
               ),
               Padding(
@@ -98,22 +104,27 @@ class _RegisterPage extends State<RegisterPage> {
     );
   }
 
-  void createUser(BuildContext context, String email, String name, String password, String confirmPassword) {
+  Future<void> createUser(BuildContext context, String email, String name, String password, String confirmPassword) async {
     if (validateInput(context, email, name, password)) {
       if (password == confirmPassword) {
         password = hashPassword(password);
         // create user by hitting the API
-        var url = Uri.http('192.168.1.11:2024', '/api/Users/CreateUser.php');
-        http.post(url, body: {
+        Map data = {
           "username": name,
           "email": email,
           "password": password,
           "admin": "false"
-        });
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyHomePage(title: "Neu News")));
+        };
+        //encode Map to JSON
+        var body = json.encode(data);
+        var response = await http.post(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/CreateUser.php"), body: body);
+        if (response.statusCode == 200 && !response.body.contains("Error")) {
+          print("LoggedIn");
+        // Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => LoginPage()));
+        }
       } else {
         showSnackBar(context, 'Passwords must match!');
       }
