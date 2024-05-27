@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
+import 'package:http/http.dart' as http;
 
 class CreateNewsPage extends StatefulWidget {
   const CreateNewsPage({super.key});
@@ -16,10 +19,14 @@ class _CreateNewsPage extends State<CreateNewsPage> {
   String _description = "";
   // newsImage will be an image upload later once S3 bucket is set up, for now it's just a URL
   String _imageURL = "";
+  String _time = "";
+  String _location = "";
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descController = TextEditingController();
   final TextEditingController imageController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
 
   @override
   dispose() {
@@ -33,52 +40,82 @@ class _CreateNewsPage extends State<CreateNewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: neuBar('Create News'),
-        body: Column(
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                      child: inputField(
-                          "Title", Icons.title, nameController)),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Description", Icons.description, descController),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Image URL", Icons.image, imageController),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20.0),
-            Row(
+        body: SingleChildScrollView(
+          child:
+            Column(
               children: [
-                // button(context, "Back", () {
-                //   Navigator.pop(context);
-                // }, 0, 0, 0, 0),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
-                  child: button(context, "Create News", () {
-                    _title = nameController.text;
-                    _description = descController.text;
-                    _imageURL = imageController.text;
-                    if (_title.isEmpty || _description.isEmpty || _imageURL.isEmpty) {
-                      showSnackBar(context, "Please fill out all fields!");
-                    } else {
-                      //create object
-                      dispose();
-                      showSnackBar(context, "News post created!");
-                    }
-                  }, 0, 0, 0, 0)
+                Center(
+                  child: Column(
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                          child: inputField(
+                              "Title", Icons.title, nameController)),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                        child: inputField(
+                            "Description", Icons.description, descController),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                        child: inputField(
+                            "Image URL", Icons.image, imageController),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                          child:
+                            inputField(
+                              "Time", Icons.access_time, timeController),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                        child: inputField(
+                            "Location", Icons.pin_drop_outlined, locationController),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20.0),
+                Row(
+                  children: [
+                    // button(context, "Back", () {
+                    //   Navigator.pop(context);
+                    // }, 0, 0, 0, 0),
+                    Padding(
+                        padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
+                        child: button(context, "Create News", () async {
+                          _title = nameController.text;
+                          _description = descController.text;
+                          _imageURL = imageController.text;
+                          _time = timeController.text;
+                          _location = locationController.text;
+                          if (_title.isEmpty || _description.isEmpty || _imageURL.isEmpty || _time.isEmpty || _location.isEmpty) {
+                            showSnackBar(context, "Please fill out all fields!");
+                          } else {
+                            //create object
+                            Map data = {
+                              "title": _title,
+                              "description": _description,
+                              "location": _location,
+                              "time": _time,
+                              "image": _imageURL,
+                            };
+
+                            var body = json.encode(data);
+                            await http.post(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Posts/CreatePost.php"), body: body);
+
+                            Navigator.pop(context);
+                            dispose();
+                            showSnackBar(context, "News post created!");
+
+
+                          }
+                        }, 0, 0, 0, 0)
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
         )
     );
   }

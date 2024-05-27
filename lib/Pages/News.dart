@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:neunews_flutter/Pages/CreateNews.dart';
 import 'package:neunews_flutter/ReusableWidgets/NewsCard.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,7 +33,6 @@ class _NewsState extends State<News> {
       );
     }
 
-
     if(allNews.isEmpty){
       allNews.add(
           Padding(
@@ -49,10 +49,14 @@ class _NewsState extends State<News> {
           )
       );
     }
-
   }
 
-
+  void _CreateNewsPage(){
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CreateNewsPage())
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,18 +64,30 @@ class _NewsState extends State<News> {
         child:
             Column(
               children: [
-                const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40),
+                Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
                     child:
-                      const Text(
-                        "Current News",
-                        style:
-                          TextStyle(
-                            fontSize: 30,
-                            color: Colors.amber,
-                            fontWeight: FontWeight.bold
-                          ),
-                      ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Text(
+                              "Current News",
+                              style:
+                              TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.amber,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            FloatingActionButton(
+                                onPressed: _CreateNewsPage,
+                                backgroundColor: Colors.amber,
+                                shape: const CircleBorder(),
+                                child: const Icon(Icons.add, size: 28)
+                            )
+                          ],
+                        )
+
                 ),
                 Center(
                     child:
