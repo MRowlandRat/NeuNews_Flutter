@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/Suggestion.dart';
+import 'package:neunews_flutter/Models/User.dart';
 import 'package:neunews_flutter/ReusableWidgets/SuggestionCard.dart';
+import 'package:neunews_flutter/Session.dart';
 
 class Suggestions extends StatefulWidget {
   const Suggestions({super.key});
@@ -10,6 +12,8 @@ class Suggestions extends StatefulWidget {
 }
 
 class _SuggestionsState extends State<Suggestions> {
+  var sessionManager = SessionManagerSingleton();
+  bool isAdmin = false;
   List<Suggestion> suggestions = [
     Suggestion(
         suggestionId: '664a6254caf42',
@@ -23,6 +27,21 @@ class _SuggestionsState extends State<Suggestions> {
   @override
   void initState() {
     super.initState();
+    fetchAndSetUser();
+  }
+
+  Future<void> fetchAndSetUser() async {
+    var json = await sessionManager.getSessionValue('user');
+    User user = User.fromJson(json);
+    if (user.isAdmin == 'true') {
+      setState(() {
+        isAdmin = true;
+      });
+    } else {
+      setState(() {
+        isAdmin = false;
+      });
+    }
   }
 
   @override
@@ -53,7 +72,7 @@ class _SuggestionsState extends State<Suggestions> {
                   ),
                 ),
               ),
-              SuggestionCard(suggestion: suggestions[0], admin: true),
+              SuggestionCard(suggestion: suggestions[0], admin: isAdmin),
             ],
           ),
         ),

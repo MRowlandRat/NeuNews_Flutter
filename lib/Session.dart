@@ -12,9 +12,10 @@ class SessionManagerSingleton {
 
   Future<void> setSessionValues(dynamic key, dynamic value) async {
     await _sessionManager.set(key, value);
+    await _sessionManager.update();
   }
 
-  Future<String> getSessionValue(String key) async {
+  Future<dynamic> getSessionValue(String key) async {
       var value = await _sessionManager.get(key);
       return value ?? '';
   }
