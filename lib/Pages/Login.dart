@@ -100,7 +100,7 @@ Future<bool> loginUser(String email, String password) async {
     }
     if (userId != "") {
       //set session
-      startSession(userId);
+      await startSession(userId);
       return true;
     } else {
       // Password or Email is not valid
@@ -140,6 +140,6 @@ Future<void> startSession(String userId) async {
   var json = jsonDecode(response.body) as Map<String, dynamic>;
   User user = User.fromJson(json);
   var sessionManager = SessionManagerSingleton();
-  sessionManager.setSessionValues("user", user);
-  sessionManager.updateSession();
+  await sessionManager.setSessionValues("user", user);
+  await sessionManager.updateSession();
 }

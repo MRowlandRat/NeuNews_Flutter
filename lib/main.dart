@@ -39,7 +39,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var sessionManager = SessionManagerSingleton();
   int _currentIndex = 0;
+  late bool _isLoggedIn = false;
   List<Widget> pageList = [
     Suggestions(),
     Clubs(),
@@ -51,79 +53,66 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    var sessionManager = SessionManagerSingleton();
-    sessionManager.updateSession();
+    fetchUser();
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Scaffold>(
-      future: checkForSession(pageList, _currentIndex, (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      }),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+    return _isLoggedIn ? Scaffold(
+            appBar: neuBar('Neu News'),
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: _currentIndex,
+              onTap: (value) {
+                setState(() {
+                  _currentIndex = value;
+                });
+                },
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.edit_document),
+                  label: "Suggestions",
+                  backgroundColor: Colors.amber,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.gamepad),
+                  label: "Clubs",
+                  backgroundColor: Colors.amber,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.house),
+                  label: "Home",
+                  backgroundColor: Colors.amber,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.newspaper),
+                  label: "News",
+                  backgroundColor: Colors.amber,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: "Account",
+                  backgroundColor: Colors.amber,
+                ),
+              ],
+            ),
+            body: pageList.elementAt(_currentIndex),
+          )
+        : const Scaffold(
+            body: RegisterPage(),
           );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(child: Text('Error: ${snapshot.error}')),
-          );
-        } else {
-          return snapshot.data!;
-        }
-      },
-    );
   }
 
-  Future<Scaffold> checkForSession(List<Widget> pageList, int currentIndex, Function(int) onTap) async {
-    var sessionManager = SessionManagerSingleton();
-    sessionManager.updateSession();
-    if (await sessionManager.verifySessionValue("user")) {
-      return Scaffold(
-        appBar: neuBar('Neu News'),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: (value) {
-            onTap(value); // Use callback to update state
-          },
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.edit_document),
-              label: "Suggestions",
-              backgroundColor: Colors.amber,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.gamepad),
-              label: "Clubs",
-              backgroundColor: Colors.amber,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.house),
-              label: "Home",
-              backgroundColor: Colors.amber,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.newspaper),
-              label: "News",
-              backgroundColor: Colors.amber,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "Account",
-              backgroundColor: Colors.amber,
-            ),
-          ],
-        ),
-        body: pageList.elementAt(currentIndex),
-      );
+  Future<void> fetchUser() async {
+    await sessionManager.updateSession();
+    var json = await sessionManager.getSessionValue('user');
+    if (json.toString().isNotEmpty) {
+      setState(() {
+      _isLoggedIn = true;
+      });
+    } else {
+      setState(() {
+        _isLoggedIn = false;
+      });
     }
-    return const Scaffold(
-      body: RegisterPage(),
-    );
   }
 }
