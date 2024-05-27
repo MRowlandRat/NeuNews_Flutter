@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/Suggestion.dart';
 import 'package:neunews_flutter/Models/User.dart';
+import 'package:neunews_flutter/Pages/CreateSuggestion.dart';
 import 'package:neunews_flutter/ReusableWidgets/SuggestionCard.dart';
 import 'package:neunews_flutter/Session.dart';
 
@@ -46,37 +47,51 @@ class _SuggestionsState extends State<Suggestions> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.all(20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(Icons.diamond),
-                      Text(
-                        'Suggestions',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w100, fontSize: 15),
-                      ),
-                    ],
+    return Scaffold(
+      body: Align(
+        alignment: Alignment.centerLeft,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.diamond),
+                        Text(
+                          'Suggestions',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w100, fontSize: 15),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SuggestionCard(suggestion: suggestions[0], admin: isAdmin),
-            ],
+                SuggestionCard(suggestion: suggestions[0], admin: isAdmin),
+              ],
+            ),
           ),
         ),
       ),
+      floatingActionButton: isAdmin
+          ? FloatingActionButton(
+              backgroundColor: Colors.amberAccent,
+              child: const Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CreateSuggestionPage()));
+              },
+            )
+          : null,
     );
   }
 }

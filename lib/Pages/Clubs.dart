@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/User.dart';
+import 'package:neunews_flutter/Pages/CreateClub.dart';
 import 'package:neunews_flutter/ReusableWidgets/ClubCard.dart';
 import 'package:http/http.dart' as http;
 import 'package:neunews_flutter/Models/Club.dart';
@@ -56,7 +56,7 @@ class _ClubsState extends State<Clubs> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return Scaffold( body: Align(
       alignment: Alignment.centerLeft,
       child: SingleChildScrollView(
         child: Padding(
@@ -92,6 +92,19 @@ class _ClubsState extends State<Clubs> {
           ),
         ),
       ),
+      ),
+      floatingActionButton: isAdmin
+      ? FloatingActionButton(
+      backgroundColor: Colors.amberAccent,
+      child: const Icon(Icons.add),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const CreateClubPage()));
+      },
+    )
+        : null,
     );
   }
 }
