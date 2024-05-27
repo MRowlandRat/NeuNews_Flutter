@@ -12,14 +12,15 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
+  var sessionManager = SessionManagerSingleton();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Align(
       alignment: Alignment.center,
       child: button(context, "Logout", () async {
-        var sessionManager = SessionManagerSingleton();
-        sessionManager.clearSessionValue("user");
+        await sessionManager.clearSessionValue("user");
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage()));
       }, 0, 0, 100, 0),
