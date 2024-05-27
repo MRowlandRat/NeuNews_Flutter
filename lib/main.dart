@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:neunews_flutter/Pages/Clubs.dart';
-import 'package:neunews_flutter/Pages/NewsPage.dart';
 import 'package:neunews_flutter/Pages/ProfilePage.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
 import 'package:neunews_flutter/Session.dart';
+import 'Pages/News.dart';
 import 'ReusableWidgets/NeuAppBar.dart';
 import 'package:neunews_flutter/Pages/Suggestions.dart';
 import 'package:neunews_flutter/Pages/HomePage.dart';
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Suggestions(),
     Clubs(),
     HomePage(),
-    NewsPage(),
+    News(),
     ProfilePage()
   ];
 

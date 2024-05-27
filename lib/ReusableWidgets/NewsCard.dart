@@ -2,36 +2,50 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewsCard extends StatefulWidget {
-  final int newsId;
+  final String postTitle;
+  final String postImage;
+  final String postDescription;
+  final String postTime;
+  final String postLocation;
 
-  const NewsCard({super.key, required this.newsId});
+  const NewsCard({
+    super.key,
+    required this.postTitle,
+    required this.postImage,
+    required this.postDescription,
+    required this.postTime,
+    required this.postLocation
+  });
 
   @override
-  State<NewsCard> createState() => _NewsCardState(newsId);
+  State<NewsCard> createState() => _NewsCardState(postTitle, postImage, postDescription, postTime, postLocation);
 }
 
 class _NewsCardState extends State<NewsCard> {
-  late int news_id;
+  late String post_title;
+  late String post_image;
+  late String post_description;
+  late String post_location;
+  late String post_date;
 
-  _NewsCardState(int newsId){
-     news_id = newsId;
+  _NewsCardState(String postTitle, String postImage, String postDescription, String postTime, String postLocation){
+     post_title = postTitle;
+     post_image = postImage;
+     post_description = postDescription;
+     post_location = postLocation;
+     post_date = postTime;
   }
 
-  void _getNewsPost(){
-    //grab from the api the news via news_id
-    
-
-  }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child:
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
+            padding: const EdgeInsets.symmetric(vertical: 15),
             child:
             Container(
-              width: MediaQuery.of(context).size.width/1.2,
+              width: MediaQuery.of(context).size.width/1.1,
               decoration:
               BoxDecoration(
                   color: Colors.white,
@@ -48,15 +62,15 @@ class _NewsCardState extends State<NewsCard> {
               child:
                   Column(
                     children: [
-                      const Center(
+                      Center(
                         child:
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
                               child:
                                 Text(
-                                'Blowing Up Puppies',
+                                post_title,
                                 style:
-                                TextStyle(
+                                const TextStyle(
                                   fontSize: 22,
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold
@@ -65,49 +79,61 @@ class _NewsCardState extends State<NewsCard> {
                             )
                       ),
                       Image.network(
-                          'https://s3.amazonaws.com/cdn-origin-etr.akc.org/wp-content/uploads/2023/02/23142013/Alaskan-Malamute-puppy-laying-down-outdoors.jpg',
-                          height: 230,
+                          post_image,
+                          height: 250,
                       ),
-                      const Center(
+                      Center(
                           child:
                           Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                             child:
                               Text(
-                                'Join us in the extinction of 30 newborn puppies with C4! It will blow you away!',
+                                post_description,
                                 style:
-                                TextStyle(
+                                const TextStyle(
                                     fontSize: 17,
                                 ),
                               ),
                           )
                       ),
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             child:
                                 Row(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.calendar_month,
                                       color: Colors.amber,
                                     ),
-                                    Text(' Friday 10/22/24'),
+                                    Text(
+                                        ' $post_date',
+                                      style:
+                                        const TextStyle(
+                                          fontSize: 13
+                                        ),
+                                    ),
                                   ],
                                 )
                           ),
                           Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child:
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.pin_drop_rounded,
                                     color: Colors.amber,
                                   ),
-                                  Text(' Commons'),
+                                  Text(
+                                      ' $post_location',
+                                    style:
+                                    const TextStyle(
+                                        fontSize: 13
+                                    ),
+                                  ),
                                 ],
                               )
                           ),
