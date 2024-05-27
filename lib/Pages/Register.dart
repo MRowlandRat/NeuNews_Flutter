@@ -54,35 +54,23 @@ class _RegisterPage extends State<RegisterPage> {
                   )),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: validationInputField(
-                    "Email",
-                    Icons.mail,
-                    _emailTextController,
-                    TextInputType.emailAddress,
-                    false),
+                child: validationInputField("Email", Icons.mail,
+                    _emailTextController, TextInputType.emailAddress, false),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: validationInputField(
-                    "Username", Icons.account_circle, _nameTextController, TextInputType.name, false),
+                child: validationInputField("Username", Icons.account_circle,
+                    _nameTextController, TextInputType.name, false),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: validationInputField(
-                    "Password",
-                    Icons.lock_outline,
-                    _passwordTextController,
-                    TextInputType.text,
-                    true),
+                child: validationInputField("Password", Icons.lock_outline,
+                    _passwordTextController, TextInputType.text, true),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: validationInputField(
-                    "Confirm Password",
-                    Icons.lock,
-                    _confirmPasswordTextController,
-                    TextInputType.text,
-                    true),
+                child: validationInputField("Confirm Password", Icons.lock,
+                    _confirmPasswordTextController, TextInputType.text, true),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(130, 10, 0, 0),
@@ -91,7 +79,8 @@ class _RegisterPage extends State<RegisterPage> {
                   _username = _nameTextController.text;
                   _password = _passwordTextController.text;
                   _confirmPassword = _confirmPasswordTextController.text;
-                  createUser(context, _email, _username, _password, _confirmPassword);
+                  createUser(
+                      context, _email, _username, _password, _confirmPassword);
                 }, 0, 0, 0, 0),
               ),
               Padding(
@@ -104,7 +93,8 @@ class _RegisterPage extends State<RegisterPage> {
     );
   }
 
-  Future<void> createUser(BuildContext context, String email, String name, String password, String confirmPassword) async {
+  Future<void> createUser(BuildContext context, String email, String name,
+      String password, String confirmPassword) async {
     if (validateInput(context, email, name, password)) {
       if (password == confirmPassword) {
         password = hashPassword(password);
@@ -117,13 +107,13 @@ class _RegisterPage extends State<RegisterPage> {
         };
         //encode Map to JSON
         var body = json.encode(data);
-        var response = await http.post(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/CreateUser.php"), body: body);
+        var response = await http.post(
+            Uri.parse(
+                "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/CreateUser.php"),
+            body: body);
         if (response.statusCode == 200 && !response.body.contains("Error")) {
-          print("LoggedIn");
-        // Navigator.pushReplacement(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => LoginPage()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
         }
       } else {
         showSnackBar(context, 'Passwords must match!');
@@ -131,7 +121,8 @@ class _RegisterPage extends State<RegisterPage> {
     }
   }
 
-  bool validateInput(BuildContext context, String email, String name, String password) {
+  bool validateInput(
+      BuildContext context, String email, String name, String password) {
     if (email.isEmpty || name.isEmpty || password.isEmpty) return false;
     if (!isValidEmail(email)) {
       showSnackBar(context, 'Please enter a valid email!');
@@ -156,7 +147,6 @@ class _RegisterPage extends State<RegisterPage> {
     return digest.toString();
   }
 
-
   bool isValidPassword(String input) {
     final RegExp passwordRegex = RegExp(
         r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[-!@#\$&*~]).{8,}$");
@@ -166,7 +156,7 @@ class _RegisterPage extends State<RegisterPage> {
 
   bool isValidEmail(String input) {
     final RegExp emailRegex = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+$");
     bool isValid = emailRegex.hasMatch(input);
     return isValid;
   }
