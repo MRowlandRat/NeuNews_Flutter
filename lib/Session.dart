@@ -25,11 +25,11 @@ class SessionManagerSingleton {
       return value;
   }
 
-  void clearSessionValue(String key) async {
-    _sessionManager.remove(key);
+  Future<void> clearSessionValue(String key) async {
+    await _sessionManager.remove(key);
   }
 
-  void updateSession() async {
+  Future<void> updateSession() async {
     await _sessionManager.update();
   }
 
