@@ -1,8 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:neunews_flutter/Models/User.dart';
+import 'package:neunews_flutter/Pages/CreateClub.dart';
 import 'package:neunews_flutter/ReusableWidgets/ClubCard.dart';
 import 'package:http/http.dart' as http;
 import 'package:neunews_flutter/Models/Club.dart';
+import 'package:neunews_flutter/Session.dart';
 
 class Clubs extends StatefulWidget {
   const Clubs({super.key});
@@ -18,12 +20,29 @@ class _ClubsState extends State<Clubs> {
     Club(clubInactive: 'false', clubName: 'NeuRobotics', clubImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrrAh6S8lkaeJCeINtdX1oEaEhr3XLZPqLPH6f90L6EA&s', clubDescription: 'Sponsored by Make Salt Lake', clubId: '664a64806eed0', clubApproved: 'true'),
   ];
 
+  var sessionManager = SessionManagerSingleton();
+  bool isAdmin = false;
+
   @override
   void initState() {
     super.initState();
-
-    // fetch();
+    fetchAndSetUser();
   }
+
+  Future<void> fetchAndSetUser() async {
+      var json = await sessionManager.getSessionValue('user');
+      User user = User.fromJson(json);
+      if (user.isAdmin == 'true') {
+        setState(() {
+          isAdmin = true;
+        });
+      } else {
+        setState(() {
+          isAdmin = false;
+        });
+      }
+  }
+
 
   // Future<void> fetch() async {
   //   var res = await http.get(Uri.parse('http://localhost:2024/api/Clubs/GetAllClubs.php'));
@@ -37,7 +56,7 @@ class _ClubsState extends State<Clubs> {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
+    return Scaffold( body: Align(
       alignment: Alignment.centerLeft,
       child: SingleChildScrollView(
         child: Padding(
@@ -67,12 +86,25 @@ class _ClubsState extends State<Clubs> {
               ),
               ClubCard(
                 club: clubs[0],
-                admin: true,
+                admin: isAdmin,
               ),
             ],
           ),
         ),
       ),
+      ),
+      floatingActionButton: isAdmin
+      ? FloatingActionButton(
+      backgroundColor: Colors.amberAccent,
+      child: const Icon(Icons.add),
+      onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const CreateClubPage()));
+      },
+    )
+        : null,
     );
   }
 }
