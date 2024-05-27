@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/User.dart';
 import 'package:neunews_flutter/Pages/CreateClub.dart';
@@ -14,12 +16,8 @@ class Clubs extends StatefulWidget {
 }
 
 class _ClubsState extends State<Clubs> {
-
-
-  List<Club> clubs = [
-    Club(clubInactive: 'false', clubName: 'NeuRobotics', clubImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrrAh6S8lkaeJCeINtdX1oEaEhr3XLZPqLPH6f90L6EA&s', clubDescription: 'Sponsored by Make Salt Lake', clubId: '664a64806eed0', clubApproved: 'true'),
-  ];
-
+  List<Club> objectClubs = [];
+  var allClubs = <Widget>[];
   var sessionManager = SessionManagerSingleton();
   bool isAdmin = false;
 
@@ -43,16 +41,54 @@ class _ClubsState extends State<Clubs> {
       }
   }
 
+  Future<void> _getAllClubs() async {
+    var response = await http.get(Uri.parse("http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Clubs/GetAllClubs.php"));
+    var clubs = jsonDecode(response.body);
 
-  // Future<void> fetch() async {
-  //   var res = await http.get(Uri.parse('http://localhost:2024/api/Clubs/GetAllClubs.php'));
-  //   print('jeffery bezos we here printing out the res.body: ');
-  //   print(jsonDecode(res.body));
-  //   for(var item in jsonDecode(res.body) as List<dynamic>){
-  //     print('jeffery b bezos here to report that the current index item is: ');
-  //     print(item);
-  //   }
-  // }
+    allClubs = <Widget>[];
+    for(var club in clubs){
+      objectClubs.add(
+          Club(
+              clubInactive: club['club_inactive'].toString(),
+              clubName: club['club_name'].toString(),
+              clubImage: club['club_image'].toString(),
+              clubDescription: club['club_description'].toString(),
+              clubId: club['club_id'].toString(),
+              clubApproved: club['club_approved'].toString()
+          )
+      );
+
+      allClubs.add(
+          Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child:
+              ClubCard(
+                club: objectClubs.last,
+                admin: isAdmin,
+              )
+          )
+
+      );
+    }
+
+    if(allClubs.isEmpty){
+      allClubs.add(
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height / 4),
+            child:
+            const Text(
+              'No Clubs currently found',
+              style:
+              TextStyle(
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic
+              ),
+            ),
+          )
+      );
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,10 +120,28 @@ class _ClubsState extends State<Clubs> {
                   ),
                 ),
               ),
-              ClubCard(
-                club: clubs[0],
-                admin: isAdmin,
-              ),
+              Center(
+                  child:
+                  FutureBuilder(
+                    future: _getAllClubs(),
+                    builder: (context, snapshot){
+                      if(snapshot.hasError){
+                        return Center(
+                          child:
+                          Text('An error has occured: ${snapshot.error}'),
+                        );
+                      }else if(snapshot.connectionState == ConnectionState.waiting){
+                        return const CircularProgressIndicator(
+                          color: Colors.amber,
+                        );
+                      }else{
+                        return Column(
+                          children: allClubs,
+                        );
+                      }
+                    },
+                  )
+              )
             ],
           ),
         ),
