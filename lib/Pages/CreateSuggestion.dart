@@ -52,17 +52,16 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
               children: [
                 Padding(
                     padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
-                    child: button(context, "Create Suggestion", () {
+                    child: button(context, "Create Suggestion", () async {
                       _title = titleController.text;
                       _description = descController.text;
                       if (_title.isEmpty || _description.isEmpty)
                       {
                         showSnackBar(context, "Fields cannot be left empty!");
                       } else {
-                        //create suggestion through API
-                        CreateSuggestions();
-                        showSnackBar(context, "Suggestion created!");
-                        dispose();
+                        await CreateSuggestions().whenComplete(() {
+                          Navigator.pop(context);
+                        });
                       }
                     }, 0, 0, 0, 0)
                 ),
@@ -81,9 +80,9 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
     };
     //encode Map to JSON
     var body = json.encode(data);
-    var response = await http.post(
+    await http.post(
         Uri.parse(
-            "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/CreateUser.php"),
+            "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Suggestions/CreateSuggestion.php"),
         body: body);
   }
 }

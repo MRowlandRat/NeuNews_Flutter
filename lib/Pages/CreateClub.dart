@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
+import 'package:http/http.dart' as http;
 
 class CreateClubPage extends StatefulWidget {
   const CreateClubPage({super.key});
@@ -58,12 +60,9 @@ class _CreateClubPage extends State<CreateClubPage> {
             const SizedBox(height: 20.0),
             Row(
               children: [
-                // button(context, "Back", () {
-                //   Navigator.pop(context);
-                // }, 0, 0, 0, 0),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
-                    child: button(context, "Create News", () {
+                    child: button(context, "Create News", () async {
                       _name = nameController.text;
                       _description = descController.text;
                       _imageURL = imageController.text;
@@ -73,10 +72,9 @@ class _CreateClubPage extends State<CreateClubPage> {
                         }
                       else
                         {
-                          //create club
-                          //clears text fields
-                          dispose();
-                          showSnackBar(context, "Your Club was created!");
+                          await CreateClub().whenComplete(() {
+                            Navigator.pop(context);
+                          });
                         }
                     }, 0, 0, 0, 0)
                 ),
@@ -85,5 +83,19 @@ class _CreateClubPage extends State<CreateClubPage> {
           ],
         )
     );
+  }
+
+  Future<void> CreateClub() async {
+    Map data = {
+      "name": _name,
+      "description": _description,
+      "image": _imageURL
+    };
+    //encode Map to JSON
+    var body = json.encode(data);
+    await http.post(
+        Uri.parse(
+            "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Suggestions/CreateSuggestion.php"),
+        body: body);
   }
 }

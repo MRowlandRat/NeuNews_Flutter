@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:neunews_flutter/Pages/Clubs.dart';
 import 'package:neunews_flutter/Pages/ProfilePage.dart';
 import 'package:neunews_flutter/Pages/Register.dart';
@@ -41,7 +40,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var sessionManager = SessionManagerSingleton();
-  int _currentIndex = 0;
+  int _currentIndex = 2;
   late bool _isLoggedIn = false;
   List<Widget> pageList = [
     Suggestions(),
