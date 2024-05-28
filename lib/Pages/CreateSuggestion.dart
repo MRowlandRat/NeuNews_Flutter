@@ -33,20 +33,14 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
         appBar: neuBar('Create Suggestion'),
         body: Column(
           children: [
-            Center(
-              child: Column(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                      child: inputField(
-                          "Suggestion Title", Icons.title, titleController)),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Suggestion Description", Icons.description, descController),
-                  ),
-                ],
-              ),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                child: inputField(
+                    "Suggestion Title", Icons.title, titleController)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child: inputField(
+                  "Suggestion Description", Icons.description, descController),
             ),
             Row(
               children: [
@@ -55,29 +49,23 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
                     child: button(context, "Create Suggestion", () async {
                       _title = titleController.text;
                       _description = descController.text;
-                      if (_title.isEmpty || _description.isEmpty)
-                      {
+                      if (_title.isEmpty || _description.isEmpty) {
                         showSnackBar(context, "Fields cannot be left empty!");
                       } else {
                         await CreateSuggestions().whenComplete(() {
                           Navigator.pop(context);
                         });
                       }
-                    }, 0, 0, 0, 0)
-                ),
-
+                    }, 0, 0, 0, 0)),
               ],
             ),
           ],
-        )
+        ),
     );
   }
 
   Future<void> CreateSuggestions() async {
-    Map data = {
-      "title": _title,
-      "description": _description
-    };
+    Map data = {"title": _title, "description": _description};
     //encode Map to JSON
     var body = json.encode(data);
     await http.post(

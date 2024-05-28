@@ -81,7 +81,7 @@ class _CreateClubPage extends State<CreateClubPage> {
               ],
             ),
           ],
-        )
+        ),
     );
   }
 

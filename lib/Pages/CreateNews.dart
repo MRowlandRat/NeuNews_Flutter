@@ -16,6 +16,7 @@ class CreateNewsPage extends StatefulWidget {
 class _CreateNewsPage extends State<CreateNewsPage> {
   String _title = "";
   String _description = "";
+
   // newsImage will be an image upload later once S3 bucket is set up, for now it's just a URL
   String _imageURL = "";
   String _location = "";
@@ -40,63 +41,59 @@ class _CreateNewsPage extends State<CreateNewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: neuBar('Create News'),
-        body: Column(
+      appBar: neuBar('Create News'),
+      body: Align(
+        alignment: Alignment.center,
+        child: Column(
           children: [
-            Center(
-              child: Column(
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                      child: inputField(
-                          "Title", Icons.title, nameController)),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Description", Icons.description, descController),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Image URL", Icons.image, imageController),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Location", Icons.map, locationController),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                    child: inputField(
-                        "Time", Icons.watch_later, timeController),
-                  ),
-                ],
-              ),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                child: inputField("Title", Icons.title, nameController)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child:
+                  inputField("Description", Icons.description, descController),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child: inputField("Image URL", Icons.image, imageController),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child: inputField("Location", Icons.map, locationController),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child: inputField("Time", Icons.watch_later, timeController),
             ),
             const SizedBox(height: 20.0),
             Row(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
-                  child: button(context, "Create News", () async {
-                    _title = nameController.text;
-                    _description = descController.text;
-                    _imageURL = imageController.text;
-                    _time = timeController.text;
-                    _location = locationController.text;
-                    if (_title.isEmpty || _description.isEmpty || _imageURL.isEmpty || _time.isEmpty || _location.isEmpty) {
-                      showSnackBar(context, "Please fill out all fields!");
-                    } else {
-                      await CreateNews().whenComplete(() {
-                        Navigator.pop(context);
-                      });
-                    }
-                  }, 0, 0, 0, 0)
-                ),
+                    padding: const EdgeInsets.fromLTRB(180, 16, 24, 0),
+                    child: button(context, "Create News", () async {
+                      _title = nameController.text;
+                      _description = descController.text;
+                      _imageURL = imageController.text;
+                      _time = timeController.text;
+                      _location = locationController.text;
+                      if (_title.isEmpty ||
+                          _description.isEmpty ||
+                          _imageURL.isEmpty ||
+                          _time.isEmpty ||
+                          _location.isEmpty) {
+                        showSnackBar(context, "Please fill out all fields!");
+                      } else {
+                        await CreateNews().whenComplete(() {
+                          Navigator.pop(context);
+                        });
+                      }
+                    }, 0, 0, 0, 0)),
               ],
             ),
           ],
-        )
+        ),
+      ),
     );
   }
 
