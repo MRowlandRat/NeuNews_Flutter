@@ -58,15 +58,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoggedIn ? Scaffold(
+    return _isLoggedIn
+        ? Scaffold(
             appBar: neuBar('Neu News'),
             bottomNavigationBar: BottomNavigationBar(
               currentIndex: _currentIndex,
               onTap: (value) {
-                setState(() {
-                  _currentIndex = value;
-                });
-                },
+                setState(
+                  () {
+                    _currentIndex = value;
+                  },
+                );
+              },
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.edit_document),
@@ -106,13 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
     await sessionManager.updateSession();
     var json = await sessionManager.getSessionValue('user');
     if (json.toString().isNotEmpty) {
-      setState(() {
-      _isLoggedIn = true;
-      });
+      setState(
+        () {
+          _isLoggedIn = true;
+        },
+      );
     } else {
-      setState(() {
-        _isLoggedIn = false;
-      });
+      setState(
+        () {
+          _isLoggedIn = false;
+        },
+      );
     }
   }
 }
