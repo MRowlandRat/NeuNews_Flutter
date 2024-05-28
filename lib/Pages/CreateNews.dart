@@ -71,8 +71,8 @@ class _CreateNewsPage extends State<CreateNewsPage> {
                       showSnackBar(context, "Please fill out all fields!");
                     } else {
                       //create object
-                      dispose();
                       showSnackBar(context, "News post created!");
+                      dispose();
                     }
                   }, 0, 0, 0, 0)
                 ),

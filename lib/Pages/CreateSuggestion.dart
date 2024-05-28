@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/ReusableWidgets/SnackBarMessage.dart';
 import '../ReusableWidgets/NeuAppBar.dart';
 import '../ReusableWidgets/Button.dart';
 import '../ReusableWidgets/InputField.dart';
+import 'package:http/http.dart' as http;
 
 class CreateSuggestionPage extends StatefulWidget {
   const CreateSuggestionPage({super.key});
@@ -58,8 +60,9 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
                         showSnackBar(context, "Fields cannot be left empty!");
                       } else {
                         //create suggestion through API
-                        dispose();
+                        CreateSuggestions();
                         showSnackBar(context, "Suggestion created!");
+                        dispose();
                       }
                     }, 0, 0, 0, 0)
                 ),
@@ -69,5 +72,18 @@ class _CreateSuggestionPage extends State<CreateSuggestionPage> {
           ],
         )
     );
+  }
+
+  Future<void> CreateSuggestions() async {
+    Map data = {
+      "title": _title,
+      "description": _description
+    };
+    //encode Map to JSON
+    var body = json.encode(data);
+    var response = await http.post(
+        Uri.parse(
+            "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Users/CreateUser.php"),
+        body: body);
   }
 }
