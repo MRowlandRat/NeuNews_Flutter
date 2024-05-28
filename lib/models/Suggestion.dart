@@ -33,11 +33,11 @@ class Suggestion {
 
   Map<String, dynamic> toJson() {
     return {
-      "suggestion_id": this.suggestionId,
-      "suggestion_title": this.suggestionTitle,
-      "suggestion_description": this.suggestionDescription,
-      "suggestion_inactive": this.suggestionInactive,
-      "suggestion_completed": this.suggestionCompleted,
+      "id": this.suggestionId,
+      "title": this.suggestionTitle,
+      "description": this.suggestionDescription,
+      "inactive": this.suggestionInactive,
+      "completed": this.suggestionCompleted,
     };
   }
 }

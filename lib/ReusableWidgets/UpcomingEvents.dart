@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import '../Models/Post.dart';
 
-class UpcomingEvents extends StatelessWidget {
-  const UpcomingEvents(
-      this.eventName, this.eventLocation, this.eventDate, this.imgUrl,
-      {super.key});
+class UpcomingEvent extends StatelessWidget {
+  final Post post;
 
-  final String eventName;
-  final String eventLocation;
-  final String eventDate;
-  final String imgUrl;
+  const UpcomingEvent({super.key, required this.post});
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +16,20 @@ class UpcomingEvents extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Align(
                     alignment: Alignment.centerLeft,
                     child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Image.network(
-                          imgUrl,
-                          fit: BoxFit.contain,
-                          width: MediaQuery.of(context).size.width / 2,
-                        )),
+                      fit: BoxFit.scaleDown,
+                      child: Image.network(
+                        post.postImage,
+                        fit: BoxFit.contain,
+                        width: MediaQuery.of(context).size.width / 2,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -44,7 +40,7 @@ class UpcomingEvents extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Flexible(
                   child: Text(
-                    eventName,
+                    post.postTitle,
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 25,
@@ -56,34 +52,39 @@ class UpcomingEvents extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(15),
               child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.location_on_outlined),
-                              Text(eventLocation,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal)),
-                            ],
-                          )),
-                          Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.access_time),
-                              Text(eventDate,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal)),
-                            ],
-                          )),
-                    ],
-                  )),
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on_outlined),
+                          Text(
+                            post.postLocation,
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.access_time),
+                          Text(
+                            post.postTime,
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.normal),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/Suggestion.dart';
 import 'package:neunews_flutter/Models/User.dart';
@@ -27,14 +26,7 @@ class _SuggestionsState extends State<Suggestions> {
 
     allSuggestions = <Widget>[];
     for(var suggestion in suggestions){
-      objectSuggestions.add(
-        Suggestion(
-            suggestionId: suggestion['suggestion_id'].toString(),
-            suggestionTitle: suggestion['suggestion_title'].toString(),
-            suggestionDescription:  suggestion['suggestion_description'].toString(),
-            suggestionInactive:  suggestion['suggestion_inactive'].toString(),
-            suggestionCompleted:  suggestion['suggestion_completed'].toString()
-        )
+      objectSuggestions.add(Suggestion.fromJson(suggestion)
       );
 
       allSuggestions.add(
@@ -108,11 +100,23 @@ class _SuggestionsState extends State<Suggestions> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Icons.diamond),
-                        Text(
-                          'Suggestions',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w100, fontSize: 15),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
+                          child: Icon(
+                            Icons.diamond,
+                            size: 40,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                          child: Text(
+                            'Suggestions',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30,
+                              color: Colors.amber,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -145,8 +149,7 @@ class _SuggestionsState extends State<Suggestions> {
           ),
         ),
       ),
-      floatingActionButton: isAdmin
-          ? FloatingActionButton(
+      floatingActionButton: FloatingActionButton(
               backgroundColor: Colors.amberAccent,
               child: const Icon(Icons.add),
               onPressed: () {
@@ -155,8 +158,7 @@ class _SuggestionsState extends State<Suggestions> {
                     MaterialPageRoute(
                         builder: (context) => const CreateSuggestionPage()));
               },
-            )
-          : null,
+            ),
     );
   }
 }

@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/Club.dart';
 import 'package:neunews_flutter/ReusableWidgets/AdminButton.dart';
+import 'package:http/http.dart' as http;
 
 class ClubCard extends StatefulWidget {
   const ClubCard({super.key, required this.club, required this.admin});
@@ -26,6 +28,27 @@ class _ClubCardState extends State<ClubCard> {
     setState(() {
       inactive = val;
       widget.club.clubInactive = val.toString();
+    });
+  }
+
+  Future<void> _updateClub() async {
+    setState(() async {
+      widget.club.clubInactive = inactive.toString();
+      widget.club.clubName = clubNameCon.text;
+      widget.club.clubDescription = clubDesCon.text;
+      var body = json.encode(widget.club.toJson());
+      await http.post(
+          Uri.parse(
+              "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Clubs/UpdateClub.php/${widget.club.clubId}"),
+          body: body);
+      print(widget.club.toJson());
+    });
+  }
+
+  Future<void> _deleteClub() async {
+    setState(() async {
+      await http.delete(Uri.parse(
+          "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Clubs/DeleteClub.php/${widget.club.clubId}"));
     });
   }
 
@@ -80,6 +103,7 @@ class _ClubCardState extends State<ClubCard> {
       });
     } else if (mode == 'Save') {
       setState(() {
+        _updateClub();
         btnTxt = 'Edit';
         widget.club.clubDescription = clubDesCon.text;
         clubDesCon.text = '';
@@ -183,7 +207,6 @@ class _ClubCardState extends State<ClubCard> {
                             action: () {
                               if (btnTxt == 'Save') {
                                 editMode('Save');
-                                print('Code editing a club');
                               } else {
                                 editMode('Edit');
                               }
@@ -196,7 +219,7 @@ class _ClubCardState extends State<ClubCard> {
                             label: 'Delete',
                             labelColor: Colors.red,
                             action: () {
-                              print('Code for deleting a club');
+                              _deleteClub();
                             },
                           ),
                         ),

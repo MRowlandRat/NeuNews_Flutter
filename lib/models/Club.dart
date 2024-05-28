@@ -37,12 +37,12 @@ class Club {
 
   Map<String, dynamic> toJson() {
     return {
-      "club_inactive": this.clubInactive,
-      "club_name": this.clubName,
-      "club_image": this.clubImage,
-      "club_description": this.clubDescription,
-      "club_id": this.clubId,
-      "club_approved": this.clubApproved,
+      "inactive": this.clubInactive,
+      "name": this.clubName,
+      "image": this.clubImage,
+      "description": this.clubDescription,
+      "id": this.clubId,
+      "approved": this.clubApproved,
     };
   }
 }

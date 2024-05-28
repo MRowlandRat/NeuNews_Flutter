@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/Suggestion.dart';
 import 'AdminButton.dart';
+import 'package:http/http.dart' as http;
 
 class SuggestionCard extends StatefulWidget {
   const SuggestionCard(
@@ -32,6 +34,25 @@ class _SuggestionCardState extends State<SuggestionCard> {
           fontSize: 18,
           color: completed ? Colors.green : Colors.red),
     );
+  }
+
+  Future<void> _completeSuggestion() async {
+    setState(() async {
+      widget.suggestion.suggestionCompleted = 'true';
+      var body = json.encode(widget.suggestion.toJson());
+      await http.post(
+          Uri.parse(
+              "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Suggestions/UpdateSuggestion.php/${widget.suggestion.suggestionId}"),
+          body: body);
+      print(widget.suggestion.toJson());
+    });
+  }
+
+  Future<void> _deleteSuggestion() async {
+    setState(() async {
+      await http.delete(Uri.parse(
+          "http://neunewsapi.us-east-1.elasticbeanstalk.com/api/Suggestions/DeleteSuggestion.php/${widget.suggestion.suggestionId}"));
+    });
   }
 
   @override
@@ -92,16 +113,16 @@ class _SuggestionCardState extends State<SuggestionCard> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AdminButton(
-                                label: 'Approve',
+                                label: 'Complete',
                                 labelColor: Colors.green,
                                 action: () {
-                                  print('code for approving a Suggestion');
+                                    _completeSuggestion();
                                 }),
                             AdminButton(
                               label: 'Delete',
                               labelColor: Colors.red,
                               action: () {
-                                print('code for deleting Suggestion');
+                                  _deleteSuggestion();
                               },
                             ),
                           ],

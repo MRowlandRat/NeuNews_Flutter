@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:neunews_flutter/Models/User.dart';
@@ -7,6 +6,7 @@ import 'package:neunews_flutter/Pages/CreateNews.dart';
 import 'package:neunews_flutter/ReusableWidgets/NewsCard.dart';
 import 'package:http/http.dart' as http;
 import 'package:neunews_flutter/Session.dart';
+import 'package:neunews_flutter/Models/Post.dart';
 
 class News extends StatefulWidget {
   const News({super.key});
@@ -47,13 +47,12 @@ class _NewsState extends State<News> {
 
     allNews = <Widget>[];
     for (var post in posts) {
-      allNews.add(NewsCard(
-        postTitle: post['post_title'].toString(),
-        postDescription: post['post_description'].toString(),
-        postImage: post['post_image'].toString(),
-        postLocation: post['post_location'],
-        postTime: post['post_time'],
-      ));
+      allNews.add(
+        NewsCard(
+          post: Post.fromJson(post),
+          isAdmin: isAdmin,
+        ),
+      );
     }
 
     if (allNews.isEmpty) {
@@ -72,40 +71,62 @@ class _NewsState extends State<News> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: const Text(
-                "Current News",
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.amber,
-                    fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
+                        child: Icon(
+                          Icons.newspaper,
+                          size: 40,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                        child: Text(
+                          'News',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            color: Colors.amber,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-            Center(
-              child: FutureBuilder(
-                future: _getAllNews(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(
-                      child: Text('An error has occured: ${snapshot.error}'),
-                    );
-                  } else if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
-                    return const CircularProgressIndicator(
-                      color: Colors.amber,
-                    );
-                  } else {
-                    return Column(
-                      children: allNews,
-                    );
-                  }
-                },
-              ),
-            )
-          ],
+              Center(
+                child: FutureBuilder(
+                  future: _getAllNews(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('An error has occured: ${snapshot.error}'),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return const CircularProgressIndicator(
+                        color: Colors.amber,
+                      );
+                    } else {
+                      return Column(
+                        children: allNews,
+                      );
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
       floatingActionButton: isAdmin
